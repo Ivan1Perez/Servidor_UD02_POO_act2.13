@@ -10,50 +10,6 @@ atributo y el valor, su valor.
 Get: Método mágico.
 Crearemos una vista con un formulario para darle valores a los atributos y un controlador
 que instancia el objeto y muestra sus valores.
-
-
-class Hombre{
-private $nombre;
-private $edad;
-function comer($comida){
-// definición del método
-}
-function moverse($destino){
-// definición del método
-}
-}
-
-class Objeto{
-private $id;
-private $nombre;
-private $email;
-function __construct($id, $nombre, $email) {
-$this->id = $id;
-$this->nombre = $nombre;
-$this->email = $email;
-}
-function __clone(){
-$this->id = ++$this->id;
-}
-public function __set($var, $valor){
-if (property_exists(__CLASS__, $var)){
-$this->$var = $valor;
-} else
-echo "No existe el atributo $var.";
-}
-public function __get($var){
-if (property_exists(__CLASS__, $var)){
-return $this->$var;
-}
-return NULL;
-}
-}
-$obj = new Objeto(1, "objeto1", "prueba1@ejemplo.com");
-$p = $obj;
-echo $p->id; //2
-$p->nombre = "nombre cambiado";
-echo $p->nombre; //nombre cambiado
-Echo $obj->nombre;
 */
 
 class Producto{
@@ -61,7 +17,7 @@ class Producto{
     private $precio;
     private $stock;
 
-    function _construct($peso, $precio, $stock){
+    function __construct($peso, $precio, $stock){
         $this->peso = $peso;
         $this->precio = $precio;
         $this->stock = $stock;
@@ -77,9 +33,24 @@ class Producto{
         }
         return NULL;
     }
+
+    public function __toString(){ 
+        return "<p>Peso: $this->peso"."kg</p>"."<p>Precio: $this->precio"."€</p><p>Stock: ".$this->stock." units</p>"; 
+        }
 }
 
-$prod = new Producto(38, 40, 160);
+if(isset($_POST['enviar'])){
+    $prod = new Producto($_POST['peso'], $_POST['precio'], $_POST['stock']);
 
-$prod->asignar();
+    $prodFields = $prod->asignar();
+
+    echo $prod;
+
+    /*foreach ($prodFields as $key => $value) {
+        echo "$key: $prodFields[$key]";
+    }*/
+}else{
+    require "formulario.html";
+}
+
 ?>
